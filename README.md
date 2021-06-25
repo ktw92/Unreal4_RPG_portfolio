@@ -25,7 +25,8 @@ PP_WizardAnim 마법사 애니메이션
 
 
 1.3 핵심 코드
-1.3.1 마우스 킬릭스 동작 하는 함수 APP_PlayerController::MovePicking 일부분
+
+1.3.1 마우스 입력으로 동작 하는 함수 APP_PlayerController::MovePicking 일부분
 
 
 	if (bHit)
@@ -99,6 +100,238 @@ PP_WizardAnim 마법사 애니메이션
 	SkillTargetFree();
 	SetUsingItemOff();
 
+1.3.2 플레이어 캐릭터의 틱 APP_Player::Tick 일부분
+
+	//시체면 타겟제거 및 초기화
+	if (TargetedMonster)
+	{
+		APP_Monster* temp_monp = Cast<APP_Monster>(TargetedMonster);
+		if (temp_monp)
+		{
+			if (temp_monp->GetStatus()->Hp <= 0)
+			{
+				TargetFree();
+				SimpleStop();
+				ChangeAnimState(AnimType::Idle);
+			}
+		}
+	}
+
+	//스킬쿨타임복구
+	for (int i = 0; i < 5; i++)
+	{
+		if (PlayerInfo.Skill_cooltimeAcc[i] < PlayerInfo.Skill_cooltime[i])
+		{
+			PlayerInfo.Skill_cooltimeAcc[i] += DeltaTime;
+		}
+		APP_PlayerController* tempcon = Cast<APP_PlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+		if (tempcon)
+		{
+			if (this == tempcon->GetControlCharacter())
+			{
+				UPP_MainWidgetFrame* temp_frame = tempcon->GetMainWidget();
+				temp_frame->SetSkillCoolTime(i, 1 - (PlayerInfo.Skill_cooltimeAcc[i] / PlayerInfo.Skill_cooltime[i]));
+			}
+		}
+	}
+
+	if (PlayerInfo.Debuff[0] == true)//마비상태면
+	{
+		PlayerInfo.Paralysis_Acc += DeltaTime;
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("pala time %f / %f"), MonsterStatus.Paralysis_Acc, ParalysisTime));
+		if (PlayerInfo.Paralysis_Acc >= ParalysisTime)
+		{
+			PlayerInfo.Paralysis_Acc = 0;
+			PlayerInfo.Debuff[0] = false;
+			SetIdle();
+			if (MyPortraitWidget)
+				MyPortraitWidget->ReSetDenuff(0);
+		}
+	}
+
+	if (PlayerInfo.Debuff[1]) //중독이면
+	{
+		PlayerInfo.Poison_Acc += DeltaTime;
+		float temp_damage = DeltaTime * 0.05f * PlayerInfo.Max_hp;
+		HpDown(temp_damage);
+		if (PoisonTime < PlayerInfo.Poison_Acc)
+		{
+			PlayerInfo.Poison_Acc = 0;
+			PlayerInfo.Debuff[1] = false;
+			if (MyPortraitWidget)
+				MyPortraitWidget->ReSetDenuff(1);
+		}
+		if ((int)(PlayerInfo.Poison_Acc + 0.1f) > (int)(PlayerInfo.Poison_Acc))//대략초당 한번 이펙트 발생
+		{
+			if (Poison)
+			{
+				FActorSpawnParameters	param;
+				param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+				GetWorld()->SpawnActor<APP_EffectBase>(Poison, GetActorLocation() + FVector(0,0,120),
+					FRotator::ZeroRotator, param);
+			}
+		}
+	}
+
+	//이동중일때
+	if (isMoving && !TargetedMonster)
+	{	
+		if(!GetController()->IsFollowingAPath()) //멈췄을때
+		{
+			isMoving = false;
+			ChangeAnimState(AnimType::Idle);
+
+			GetMesh()->SetRelativeRotation(FRotator(0.f, GetMesh()->GetRelativeRotation().Yaw + 90.f, 0.f));
+			
+			FVector endp = FVector(GetActorLocation().X + GetMesh()->GetForwardVector().X*1000, GetActorLocation().Y + GetMesh()->GetForwardVector().Y*1000, GetActorLocation().Z);
+
+			FHitResult temp;
+			bool bSweep = GetWorld()->LineTraceSingleByChannel(temp, GetActorLocation(), endp, ECollisionChannel::ECC_GameTraceChannel3);
+
+			GetMesh()->SetRelativeRotation(FRotator(0.f, GetMesh()->GetRelativeRotation().Yaw - 90.f, 0.f));
+		}
+		else
+		{
+			//목표로 회전
+			FVector Dir = MoveGoal - GetActorLocation();
+			Dir.Normalize();
+			GetMesh()->SetWorldRotation(FRotator(0.f, Dir.Rotation().Yaw - 90.f, 0.f));
+		}
+	
+	}
+	//자동전투중
+	else if (isAutoBattle)
+	{
+		//타겟이 있으면 거리 측정 후 공격 또는 추격
+		if (TargetedMonster)
+		{
+			//일단 이동
+			if ((PlayerInfo.AnimState != AnimType::Attack1))
+			{
+				AActor* tempm1 = TargetedMonster;
+				SimpleMove(TargetedMonster->GetActorLocation());
+				TargetedMonster = tempm1;
+			}
+		
+			if (PlayerInfo.AnimState != AnimType::Attack1)
+			{
+					float dist = FVector::Dist(GetActorLocation(), TargetedMonster->GetActorLocation());
+					if (dist <= PlayerInfo.Attack_range) //공격거리에 있으면 공격
+					{
+						FVector dir = TargetedMonster->GetActorLocation() - GetActorLocation();
+						dir.Normalize();
+						GetMesh()->SetWorldRotation(FRotator(0.f, dir.Rotation().Yaw - 90.f, 0.f));
+						SimpleStop();
+						ChangeAnimState(AnimType::Attack1);
+						
+					}
+					else //공격중거리에 없으면 이동
+					{
+						AActor* tempm = TargetedMonster;
+						SimpleMove(TargetedMonster->GetActorLocation());
+						TargetedMonster = tempm;
+						
+					}
+			}
+			else //(PlayerInfo.AnimState == AnimType::Attack1)
+			{
+				float dist = FVector::Dist(GetActorLocation(), TargetedMonster->GetActorLocation());
+				if (dist >= PlayerInfo.Attack_range) //공격거리에 벗어나 있으면 다시 이동
+				{
+					AActor* tempm2 = TargetedMonster;
+					SimpleMove(TargetedMonster->GetActorLocation());
+					TargetedMonster = tempm2;
+					//GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Green, FString::Printf(TEXT("so far move")));
+				}
+			}
+			FVector Dir = TargetedMonster->GetActorLocation() - GetActorLocation();
+			Dir.Normalize();
+			GetMesh()->SetWorldRotation(FRotator(0.f, Dir.Rotation().Yaw - 90.f, 0.f));
+		}
+		else //타겟 없으면 탐지
+		{
+			TArray<FHitResult> temp = SphereMulti(this->GetActorLocation(), PlayerInfo.Attack_range * 20, GetWorld(), this, ECC_GameTraceChannel3, true);
+			float mindist = 123456789;
+			for (auto& hitted : temp)
+			{
+				APP_Monster* HittedMonster = Cast<APP_Monster>(hitted.GetActor());
+				if (HittedMonster)
+				{
+					//시체는 안건드림
+					if (HittedMonster->GetStatus()->Hp <= 0)
+					{
+						//TargetFree();
+						ChangeAnimState(AnimType::Idle);
+					}
+					else
+					{
+						//가장 가까운 개체를 타겟으로
+						float dist = FVector::Dist(GetActorLocation(), HittedMonster->GetActorLocation());
+						if (dist < mindist)
+						{
+							mindist = dist;
+							TargetedMonster = HittedMonster;
+						}
+					}			
+				}
+			}
+		}
+	}
+	//몬스터클릭해서 자동공격인 상태
+	else if(TargetedMonster)
+	{
+		//몬스터 죽었는지 확인
+		APP_Monster* temp_mon = Cast< APP_Monster>(TargetedMonster);
+		if (temp_mon)
+		{
+			if (temp_mon->GetStatus()->Hp <= 0)
+			{
+				SimpleStop();
+				TargetFree();
+			}
+		}
+		
+		if (PlayerInfo.AnimState != AnimType::Attack1)
+		{
+			float dist = FVector::Dist(GetActorLocation(), TargetedMonster->GetActorLocation());
+			if (dist <= PlayerInfo.Attack_range) //공격거리에 있으면
+			{
+				FVector dir = TargetedMonster->GetActorLocation() - GetActorLocation();
+				dir.Normalize();
+				GetMesh()->SetWorldRotation(FRotator(0.f, dir.Rotation().Yaw - 90.f, 0.f));
+				SimpleStop();
+				ChangeAnimState(AnimType::Attack1);
+			}
+			else //거리에 없으면 계속이동
+			{
+				AActor* tempm = TargetedMonster;
+				SimpleMove(TargetedMonster->GetActorLocation());
+				TargetedMonster = tempm;
+			}
+		}
+		else //공격중에 거리에서 멀어지면 이동
+		{
+			float dist = FVector::Dist(GetActorLocation(), TargetedMonster->GetActorLocation());
+			if (!(dist <= PlayerInfo.Attack_range)) //공격거리에 있으면
+			{
+				AActor* tempm = TargetedMonster;
+				SimpleMove(TargetedMonster->GetActorLocation());
+				TargetedMonster = tempm;
+			}
+		}
+
+		FVector Dir = TargetedMonster->GetActorLocation() - GetActorLocation();
+		Dir.Normalize();
+		GetMesh()->SetWorldRotation(FRotator(0.f, Dir.Rotation().Yaw - 90.f, 0.f));
+	}
+	else if (isAssemble) //다 끝내고 집합중
+	{
+	isAssemble;
+	}
+	else
+	{
+		SimpleStop();
+	}
 
 2. 몬스터
 
