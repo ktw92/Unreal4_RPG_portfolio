@@ -366,10 +366,54 @@ PP_Monster클래스를 상속받은 11가지의 몬스터들이 있으며 각 �
 
 2.2 코드
 
-2.1 탐지 방식
+2.1 탐지 방식1
 
 
+if (!m_Target)
+		{	
+			TArray<FHitResult> temp = SphereMulti(this->GetActorLocation(), DetectRange, GetWorld(), this, ECC_GameTraceChannel4, false);
+			for (auto& hitted : temp)
+			{
+				APP_Player* temhit = Cast< APP_Player>(hitted.GetActor());
+				if (temhit)
+				{
+					if (temhit->GetPlayerInfo()->Hp > 0)
+					{
+						m_Target = Cast<AActor>(hitted.GetActor());
+						break;
+					}
+				}
+			}
+		}
+		if (m_Target)
+		{
+			float dist = FVector::Distance(m_Target->GetActorLocation(), GetActorLocation());
+			if (dist > AttackRange)
+			{
+				if (MyAnim)
+					MyAnim->SetAnimState(AnimType::Move);
+				UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), m_Target);
+			}
+			else
+			{
+				GetController()->StopMovement();
+				if (MyAnim)
+				{
+					if (MyAnim->GetAnimState() != AnimType::Attack1)
+					{
+						FVector	Dir = m_Target->GetActorLocation() - GetActorLocation();
+						Dir.Normalize();
+						SetActorRotation(FRotator(0.f, Dir.Rotation().Yaw, 0.f));
+						MyAnim->SetAnimState(AnimType::Attack1);
+					}
+				}
+			}
+		}
+	
+2.1 탐지 방식2
 
+
+	
 2.3 관련 클래스
 
 PP_ArachnidBoss, PP_ArachnidBossAnim 레벨2의 보스
