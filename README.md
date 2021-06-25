@@ -729,6 +729,37 @@ PP_ProjectileBoom 직선으로 이동하며 충돌 또는 일정 시간 후 주�
 
 4. UI 및 시스템
 
+
+4.3 관련 클래스
+
+PP_BuffIconWidget 독,마비,버프 상태를 나타내주는 클래스
+
+PP_EquipItemData 장비 아이템의 정보를 담는 클래스
+
+PP_EquipItemWidgeet 장비 아이템 1칸의 기능을 하는 클래스
+
+PP_EquipWidgeet 장비 아이템을 리스트뷰로 보여주는 클래스
+
+PP_InventoryWidget 장비창을 보여주는 클래스
+
+PP_MainWidgetFrame 모든 위젯들은 담는 클래스
+
+PP_MiniMapIcon 미니맵에 표시되는 녹색(플레이어)/적색(몬스터) 아이콘 클래스
+
+PP_MiniMapWidget 미니맵 클래스
+
+PP_PlayerPortraitWidget 캐릭터의 정보(HP,MP,EXP)를 보여주는 클래스
+
+PP_QuestWidget 퀘스트의 정보를 보여주는 클래스
+
+PP_Quset 퀘스트의 정보를 담는 클래스
+
+PP_ShopItemData 상점의 아이템의 데이터를 담는 클래스
+
+PP_ShopItemWidgeet 상정창의 1칸의 기능을 하는 클래스
+
+PP_ShopWidget 상점을 리스트뷰로 보여주는 클래스
+
 <br /> 
 <br /> 
 <br /> 
