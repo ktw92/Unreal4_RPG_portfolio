@@ -3,36 +3,15 @@
 1. 플레이어
 
 
-1.2 관련 클래스
+1.2 핵심 코드
 
-PP_ElfSwordMaster 기사
-
-PP_ElfSwordMasterAnim 기사 애니메이션
-
-PP_HighPriestess 힐러
-
-PP_HighPriestessAnim 힐러 애니메이션
-
-PP_Player 각 캐릭터들의 부모 클래스 (언리얼의 캐릭터 클래스 상속)
-
-PP_PlayerController 전체 캐릭터를 조작하기 위한 입력을 받는 클래스 (언리얼의 플레이어컨트롤러 상속)
-
-PP_GameInstance 캐릭터정보와 아이템정보를 관리하는 클래스 (언리얼의 게임인스턴스를 상속)
-
-PP_Wizard 마법사
-
-PP_WizardAnim 마법사 애니메이션
-
-
-1.3 핵심 코드
-
-1.3.1 마우스 입력으로 동작 하는 함수 APP_PlayerController::MovePicking 일부분
+1.2.1 마우스 입력으로 동작 하는 함수 APP_PlayerController::MovePicking 일부분
 마우스로 클릭한 대상에 따라서 알맞은 처리를 합니다
 
 
 	if (bHit)
 	{
-		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("%f, %f, %f"), result.Location.X, result.Location.Y, result.Location.Z));
+		
 		if (ControlCharacter && !ControlCharacter->GetPlayerInfo()->Debuff[0])
 		{
 			APP_Player* isPlayer = Cast<APP_Player>(result.Actor);
@@ -46,7 +25,6 @@ PP_WizardAnim 마법사 애니메이션
 					{
 						ControlCharacter->SetSKillTarget(temptarget, SkillNum);
 						ControlCharacter->TargetFree();
-						//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, FString::Printf(TEXT("Skill target on")));
 					}
 					else
 						ControlCharacter->SetTargetMonster(temptarget);
@@ -63,7 +41,6 @@ PP_WizardAnim 마법사 애니메이션
 				{
 					ControlCharacter->SetSKillTarget(isPlayer, SkillNum);
 					ControlCharacter->TargetFree();
-					//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, FString::Printf(TEXT("Skill target on")));
 				}
 				else //컨트롤캐릭전환
 				{
@@ -76,7 +53,6 @@ PP_WizardAnim 마법사 애니메이션
 						MyMainWidget->ChangeSkill_Icon(ControlCharacter->GetPlayerInfo()->PortraitNum);
 					//장비창 전환
 					ChangeEquip();
-					//MyMainWidget->GetEquipWidget()->SetImageAndVisible(ControlCharacter->GetPlayerInfo()->PortraitNum - 1, (int)(ControlCharacter->GetPlayerInfo()->MyItem), true);
 				}
 			}
 			else
@@ -101,7 +77,7 @@ PP_WizardAnim 마법사 애니메이션
 	SkillTargetFree();
 	SetUsingItemOff();
 
-1.3.2 플레이어 캐릭터의 틱 APP_Player::Tick 일부분
+1.2.2 플레이어 캐릭터의 틱 APP_Player::Tick 일부분
 
 3가지 캐릭터의 공통적인 상태이상이나 자동전투에 따른 행동을 처리합니다
 
@@ -141,7 +117,6 @@ PP_WizardAnim 마법사 애니메이션
 	if (PlayerInfo.Debuff[0] == true)//마비상태면
 	{
 		PlayerInfo.Paralysis_Acc += DeltaTime;
-		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("pala time %f / %f"), MonsterStatus.Paralysis_Acc, ParalysisTime));
 		if (PlayerInfo.Paralysis_Acc >= ParalysisTime)
 		{
 			PlayerInfo.Paralysis_Acc = 0;
@@ -244,7 +219,6 @@ PP_WizardAnim 마법사 애니메이션
 					AActor* tempm2 = TargetedMonster;
 					SimpleMove(TargetedMonster->GetActorLocation());
 					TargetedMonster = tempm2;
-					//GEngine->AddOnScreenDebugMessage(-1, 0.2f, FColor::Green, FString::Printf(TEXT("so far move")));
 				}
 			}
 			FVector Dir = TargetedMonster->GetActorLocation() - GetActorLocation();
@@ -263,7 +237,6 @@ PP_WizardAnim 마법사 애니메이션
 					//시체는 안건드림
 					if (HittedMonster->GetStatus()->Hp <= 0)
 					{
-						//TargetFree();
 						ChangeAnimState(AnimType::Idle);
 					}
 					else
@@ -335,6 +308,27 @@ PP_WizardAnim 마법사 애니메이션
 	{
 		SimpleStop();
 	}
+
+1.3 관련 클래스
+
+PP_ElfSwordMaster 기사
+
+PP_ElfSwordMasterAnim 기사 애니메이션
+
+PP_HighPriestess 힐러
+
+PP_HighPriestessAnim 힐러 애니메이션
+
+PP_Player 각 캐릭터들의 부모 클래스 (언리얼의 캐릭터 클래스 상속)
+
+PP_PlayerController 전체 캐릭터를 조작하기 위한 입력을 받는 클래스 (언리얼의 플레이어컨트롤러 상속)
+
+PP_GameInstance 캐릭터정보와 아이템정보를 관리하는 클래스 (언리얼의 게임인스턴스를 상속)
+
+PP_Wizard 마법사
+
+PP_WizardAnim 마법사 애니메이션
+
 
 2. 몬스터
 
