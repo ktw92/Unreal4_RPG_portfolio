@@ -1,7 +1,7 @@
 # Unreal4_RPG_portfolio
-
 1. 플레이어
-
+3가지 캐릭터의 포인터를 갖고 있는 컨트롤러 클래스를 통해서 캐릭터들을 조작하며
+컨트롤러는 화면내의 액터들을 클릭하거나 UI버튼을 누르는 방식으로 이동, 자동전투, 방어, 아이템 사용, 각 캐릭터들의 스킬을 사용등의 조작을 합니다.
 
 1.2 핵심 코드
 
@@ -313,7 +313,7 @@
 
 PP_ElfSwordMaster 기사
 
-PP_ElfSwordMasterAnim 기사 애니메이션
+PP_ElfSwordMasterAnim 기사의 애니메이션
 
 PP_HighPriestess 힐러
 
