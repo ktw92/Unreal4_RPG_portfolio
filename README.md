@@ -9,7 +9,7 @@
 [![Video Label](https://i.ytimg.com/an_webp/Tv0JURa6t2s/mqdefault_6s.webp?du=3000&sqp=CPfq1oYG&rs=AOn4CLCJgDw7KFfydDxXmHahP3CO3JiwUg)](https://youtu.be/Tv0JURa6t2s)
 
 https://youtu.be/Tv0JURa6t2s
-
+<br /> 
 1. 플레이어
 
 3가지 캐릭터의 포인터를 갖고 있는 컨트롤러 클래스를 통해서 사용자의 입력을 받고 캐릭터들을 조작합니다.
