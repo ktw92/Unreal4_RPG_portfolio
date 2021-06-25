@@ -6,6 +6,10 @@
 각 직업의 캐릭터들은 PP_Player클래스를 상속 받고, 각 캐릭터 특성에 따른 레벨, 스킬사용등의 함수를 구현하였고
 플레이어의 입력 또는 자동전투 방식에 따라 애니메이션 인스턴스를 상속받은 각 _Anim클래스의 함수들을 호출하여 애니메이션 상태를 전환 하고,
 애니메이션의 노티파이 함수에서 각 직업의 스킬을 호출하는 방식으로 공격과 스킬, 방어등을 사용합니다.
+각 캐릭터들의 스킬은 다음과 같습니다
+기사 - 자신을 주변 몬스터들의 타겟으로, 방어자세 후 받은 대미지만큼 반격, 공격업(지속적으로 체력 감소) 버프, 4연속 단일공격, 범위공격 후 HP흡수
+힐러 - 단일 힐, 파티 힐, 단일 상태이상제거, 단일 부활, 전체 부활 및 HP,MP회복
+마법사 - 단일 개체 공격 후 스플래시, 장판공격, 단일 마비, 범위 공격, 단일공격 후 MP흡수
 
 1.2 핵심 코드
 
@@ -315,13 +319,9 @@
 
 1.3 관련 클래스
 
-PP_ElfSwordMaster 기사
+PP_ElfSwordMaster, PP_ElfSwordMasterAnim 기사
 
-PP_ElfSwordMasterAnim 기사의 애니메이션
-
-PP_HighPriestess 힐러
-
-PP_HighPriestessAnim 힐러 애니메이션
+PP_HighPriestess, PP_HighPriestessAnim 힐러
 
 PP_Player 각 캐릭터들의 부모 클래스 (언리얼의 캐릭터 클래스 상속)
 
@@ -329,13 +329,60 @@ PP_PlayerController 전체 캐릭터를 조작하기 위한 입력을 받는 클
 
 PP_GameInstance 캐릭터정보와 아이템정보를 관리하는 클래스 (언리얼의 게임인스턴스를 상속)
 
-PP_Wizard 마법사
-
-PP_WizardAnim 마법사 애니메이션
+PP_Wizard, PP_WizardAnim 마법사
 
 
 2. 몬스터
-PP_Monster클래스를 상속받는 
+PP_Monster클래스를 상속받은 11가지의 몬스터들이 있으며 각 몬스터들의 특징은 아래와 같습니다.
+고블린 - 탐지(플레이어 캐릭터를 탐색) 후 근거리 공격
+
+오크서포터 - 탐지 후 사거리 내의 원거리 공격 및 근처 HP비율이 낮은 몬스터에게 힐
+
+오크 - 탐지 후 마비공격, 전체마비 등의 스킬사용
+
+스콜피 - 탐지가 아닌 자신을 공격한 플레이어를 근거리 공격, 타겟이 없을 시 근처를 랜덤하게 이동
+
+아라크네 - 고정된 자리에서 거리에따른 근,원거리 공격과 장판스킬, 독스킬, 몬스터를 소환
+
+붐스파이더 - 고블린과 같은 동작을 하나 사망 시 주변에 대미지
+
+텐타클몬스터 - 붐스파이더와 같은 동작을 하나 기본공격에 확률적 상태이상 추가
+
+만드레이크 - 단순히 시간마다 주변 캐릭터를 마비상태이상으로 만들고, TakeDamage를 오버라이드해 대미지를 준 캐릭터에 거리가 멀면 대미지를 0으로 처리
+
+서큐버스 - 3방향 원거리 공격과 전체 상태이상, 범위 스킬, 가장 먼 거리의 플레이어 캐릭터 뒤로 순간이동등의 스킬을 사용
+
+사탄 - 5방향 원거리 공격과 다양한 범위스킬(자신위치에 장판, 특정 캐릭터 주변에 대미지, 매테오, 을 사용
+
+라보스 - 고정된 자리에서 다양한 범위스킬과 상태이상 즉사공격 사용
+
+
+2.3 관련 클래스
+PP_ArachnidBoss, PP_ArachnidBossAnim 레벨2의 보스
+
+PP_BoomSpider, PP_BoomspiderAnim 레벨2보스의 소환수
+
+PP_Goblin, PP_GoblinAnim 레벨1의 일반 몬스터
+
+PP_LastBoss, PP_LastBossAnim 레벨4의 최종 보스
+
+PP_Mandrake, PP_MandrakeAnim 레벨3의 퍼즐 몬스터
+
+PP_Monster 언리얼의 캐릭터 클래스를 상속 받은 모든 몬스터들의 기본이 되는 클래스
+
+PP_MonsterSpawnPotin 시간에 따라 몬스터를 스폰시키는 클래스
+
+PP_Orc, PP_OrcAnim 레벨2의 보스
+
+PP_OrcSupporter,PP_OrcSupporterAnim 레벨2의 보스
+
+PP_Satan, PP_SatanAnim 레벨3의 보스
+
+PP_Scorpi, PP_ScorpiAnim 레벨2의 몬스터
+
+PP_Succubus, PP_SuccubusAnim 레벨3의 보스
+
+PP_TectacleMonster, PP_TentacleMonsterAnim 레벨3의 몬스터
 
 3. 스킬
 
