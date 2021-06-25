@@ -9,6 +9,22 @@
 [![Video Label](https://i.ytimg.com/an_webp/Tv0JURa6t2s/mqdefault_6s.webp?du=3000&sqp=CPfq1oYG&rs=AOn4CLCJgDw7KFfydDxXmHahP3CO3JiwUg)](https://youtu.be/Tv0JURa6t2s)
 
 https://youtu.be/Tv0JURa6t2s
+
+# 목차
+1. 플레이어
+
+3. 몬스터
+
+3. 스킬
+
+4. UI
+
+5. 기타
+
+6. 개선 해야할 점 (다음 프로젝트에서 지향해야 할 원칙)
+
+7. 일별 진행과정
+
 <br /> 
 ## 1. 플레이어
 
@@ -1044,6 +1060,9 @@ PP_ShopWidget 상점을 리스트뷰로 보여주는 클래스
 	}
 
 # 6. 개선해야 할 부분
+
+프로젝트 진행 중 발견한 문제점들을 참고해 다음 프로젝트에서 지향해야 할 것들에 대한 정리
+
 
 6.1 조급하게 하드 코딩 하지 말 것
 
