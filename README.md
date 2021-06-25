@@ -858,8 +858,6 @@ APP_MiniMapCamOwner::setIcon
 					{
 						if (Quest_Board)
 						{
-							//FText temptext = FText::AsNumber(GoalNum - MonsterCnt);
-							//Quest_Board->SetTargetText(temptext);
 							Quest_Board->SetTargetText(FString::Printf(TEXT("%d / %d"), MonsterCnt, GoalNum));
 						}
 					}
@@ -933,4 +931,28 @@ PP_ShopWidget 상점을 리스트뷰로 보여주는 클래스
 <br /> 
 
 5. 기타
+
+5.1 아이템박스
+
+각 몬스터들이 아이템 박스 클래스를 갖고 사망시 생성한 후 아래의 오버랩함수를 통해서 아이템 인덱스에 맞는 아이템을 인벤토리에 추가 하고 제거 합니다.
+
+	APP_DropItem::BoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+	{
+	APP_PlayerController* temp = Cast<APP_PlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (temp)
+	{
+		//아이템 추가
+		temp->ObtainItem(ItemIndex);
+		if (ItemEffect)
+		{
+			FActorSpawnParameters	param;
+			param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			GetWorld()->SpawnActor<APP_EffectBase>(ItemEffect, GetActorLocation(),
+				FRotator::ZeroRotator, param);
+		}
+	}
+	Destroy();
+	}
 
