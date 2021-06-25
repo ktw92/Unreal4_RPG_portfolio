@@ -6,7 +6,7 @@
 
 싱글RPG 개인프로젝트
 
-[![Video Label](https://youtu.be/Tv0JURa6t2s.jpg)](https://youtu.be/Tv0JURa6t2s)
+[![Video Label](https://i.ytimg.com/an_webp/Tv0JURa6t2s/mqdefault_6s.webp?du=3000&sqp=CPfq1oYG&rs=AOn4CLCJgDw7KFfydDxXmHahP3CO3JiwUg)](https://youtu.be/Tv0JURa6t2s)
 
 https://youtu.be/Tv0JURa6t2s
 
