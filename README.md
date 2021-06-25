@@ -22,9 +22,11 @@ https://youtu.be/Tv0JURa6t2s
 ![knight12](https://user-images.githubusercontent.com/76766673/123456380-bdb3b980-d61d-11eb-8daa-26fbde157233.gif)
 
 기사 - 자신을 주변 몬스터들의 타겟으로, 방어자세 후 받은 대미지만큼 반격, 공격업(지속적으로 체력 감소) 버프, 4연속 단일공격, 범위공격 후 HP흡수
+
 ![heal12](https://user-images.githubusercontent.com/76766673/123456386-bf7d7d00-d61d-11eb-81f9-497c55ddbab4.gif)
 
 힐러 - 단일 힐, 파티 힐, 단일 상태이상제거, 단일 부활, 전체 부활 및 HP,MP회복
+
 ![wizard24](https://user-images.githubusercontent.com/76766673/123457202-a4f7d380-d61e-11eb-8456-9ecae23a1d77.gif)
 
 마법사 - 단일 개체 공격 후 스플래시, 장판공격, 단일 마비, 범위 공격, 단일공격 후 MP흡수
@@ -370,9 +372,13 @@ PP_Monster클래스를 상속받은 11가지의 몬스터들이 있으며 각 �
 
 오크서포터 - 탐지 후 사거리 내의 원거리 공격 및 근처 HP비율이 낮은 몬스터에게 힐
 
+![boss1](https://user-images.githubusercontent.com/76766673/123457237-acb77800-d61e-11eb-9fec-8c03c111b8c2.gif)
+
 오크 - 탐지 후 마비공격, 전체마비 등의 스킬사용
 
 스콜피 - 탐지가 아닌 자신을 공격한 플레이어를 근거리 공격, 타겟이 없을 시 근처를 랜덤하게 이동
+
+![boss2](https://user-images.githubusercontent.com/76766673/123457246-ae813b80-d61e-11eb-9f54-b54e0b77e9aa.gif)
 
 아라크네 - 고정된 자리에서 거리에따른 근,원거리 공격과 장판스킬, 독스킬, 몬스터를 소환
 
@@ -382,9 +388,13 @@ PP_Monster클래스를 상속받은 11가지의 몬스터들이 있으며 각 �
 
 만드레이크 - 단순히 시간마다 주변 캐릭터를 마비상태이상으로 만들고, TakeDamage를 오버라이드해 대미지를 준 캐릭터에 거리가 멀면 대미지를 0으로 처리
 
+![boss3](https://user-images.githubusercontent.com/76766673/123457395-d7093580-d61e-11eb-8deb-ba593e191589.gif)
+
 서큐버스 - 3방향 원거리 공격과 전체 상태이상, 범위 스킬, 가장 먼 거리의 플레이어 캐릭터 뒤로 순간이동등의 스킬 사용
 
 사탄 - 5방향 원거리 공격과 다양한 범위스킬(자신위치에 장판, 특정 캐릭터 주변에 대미지, 매테오) 스킬 사용
+
+![boss4](https://user-images.githubusercontent.com/76766673/123457441-e1c3ca80-d61e-11eb-95da-2a28d7d81b79.gif)
 
 라보스 - 고정된 자리에서 다양한 범위스킬(바둑판식 장판, 4분면매태오, 전체공격 후 흡혈)과 상태이상, 즉사공격 스킬 사용
 
@@ -523,6 +533,9 @@ Tick함수 내부에서 다음과 같이 스킬쿨타임을 체크하고 스킬 
 
 # 2.2.4 랜덤한 플레이어에 주변에 1차공격 후 2차 공격하는 스킬
 
+![8way](https://user-images.githubusercontent.com/76766673/123457541-fdc76c00-d61e-11eb-8d7d-270aa3959f68.gif)
+
+
 	if (IsFirst)
 			{
 				TArray<APP_Player*>* players = temp_controller->GetMyParty();
@@ -597,6 +610,8 @@ PP_TectacleMonster, PP_TentacleMonsterAnim 레벨3의 몬스터
 
 # 3.2.1 기본 원거리 공격
 
+![normal](https://user-images.githubusercontent.com/76766673/123457656-1899e080-d61f-11eb-9276-bdba152dadba.gif)
+
 할당된 채널에 따라 플레이어,몬스터 공동 사용이 가능하게 구현 했습니다.
 
 	{
@@ -637,6 +652,8 @@ PP_TectacleMonster, PP_TentacleMonsterAnim 레벨3의 몬스터
 <br /> 
 
 # 3.2.2 이동하는 시한폭탄 PP_ProjectileBoom::Tick
+
+![boom](https://user-images.githubusercontent.com/76766673/123457746-323b2800-d61f-11eb-941c-e5f094fad1b2.gif)
 
 스킬을 사용하는 캐릭터가 클래스를 월드에 생성한 후 페러미터 할당 함수로 변수들의 값(시간,대미지 등)을 조절하면 그에 따라 동작하도록 구현 했습니다.
 
@@ -877,6 +894,8 @@ APP_MiniMapCamOwner::setIcon
 
 # 4.2.3 아이템 장착
 
+![equip](https://user-images.githubusercontent.com/76766673/123457908-60b90300-d61f-11eb-8667-d1b87edb41a1.gif)
+
 인벤토리의 아이템을 클릭하면 해당 위젯의 소유자에게 해제한 후 소유자를 변경하는 방식으로 아이템을 착용 합니다.
 
 	UPP_EquipItemWidgeet::EQItemClick()
@@ -945,6 +964,8 @@ PP_ShopWidget 상점을 리스트뷰로 보여주는 클래스
 
 # 5.1 아이템박스
 
+![obtain](https://user-images.githubusercontent.com/76766673/123457985-77f7f080-d61f-11eb-9d36-89cee7512fbf.gif)
+
 각 몬스터들이 아이템 박스 클래스를 갖고 사망시 생성한 후 아래의 오버랩함수를 통해서 아이템 인덱스에 맞는 아이템을 인벤토리에 추가 하고 제거 합니다.
 
 	APP_DropItem::BoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
@@ -968,6 +989,8 @@ PP_ShopWidget 상점을 리스트뷰로 보여주는 클래스
 	}
 
 # 5.2 토클 스위치와 벽
+
+![toggle](https://user-images.githubusercontent.com/76766673/123458035-85ad7600-d61f-11eb-856d-66d8ad2017a2.gif)
 
 몬스터를 상속 받은 스위치 클래스에서 태그를 통해 담당 벽을 검색하고 벽의 이동시작 함수를 호출하면 벽의 Tick에서 벽의 위치를 변경 
 
