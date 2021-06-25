@@ -1,4 +1,9 @@
 # Unreal4_RPG_portfolio
+
+엔진버전 4.26
+개발기간 4주
+싱글RPG 개인프로젝트
+
 1. 플레이어
 
 3가지 캐릭터의 포인터를 갖고 있는 컨트롤러 클래스를 통해서 사용자의 입력을 받고 캐릭터들을 조작합니다.
@@ -571,16 +576,162 @@ PP_TectacleMonster, PP_TentacleMonsterAnim 레벨3의 몬스터
 <br /> 
 
 3. 스킬
+스킬의 형식에따라 클래스들을 만들었으며 블루프린트로 만든 후 각 스킬들의 특성에 맞게 사운드, 비주얼효과(파티클,나이아가라) 리소스를 넣어주었습니다.
+플레이어, 몬스터 공용으로 사용할 수 있게 채널을 따로 갖고 그 채널에 따라 알맞은 동작을 하도록 구현 했습니다.
+초기 기획 외에 마지막에 추가된 스킬들이 있어 코드 중복을 줄이지 못한점은 아쉬움이 남는 점 입니다.
+
+<br /> 
+
+3.2 코드
+
+3.2.1 기본 원거리 공격
+
+할당된 채널에 따라 플레이어,몬스터 공동 사용이 가능하게 구현 했습니다.
+
+	{
+		//충돌감지 후 터짐
+		FHitResult temp = DetectSphere(GetActorLocation(), Radius, GetWorld(), Owner, Type);
+		if (Type == ECC_GameTraceChannel3)//플레이어의 공격
+		{
+			APP_Monster* isMon = Cast<APP_Monster>(temp.Actor);
+			if (isMon)
+			{
+				if (isMon->GetStatus()->Hp > 0) //시체가 아니면
+				{
+					FDamageEvent	DmgEvent;
+					UGameplayStatics::GetPlayerController(GetWorld(), 0);
+					isMon->TakeDamage(Damage, DmgEvent, UGameplayStatics::GetPlayerController(GetWorld(), 0), Owner);
+					isEnd = true;
+				}
+			}
+		}
+		else //(Type == ECC_GameTraceChannel4);
+		{
+			APP_Player* isP = Cast<APP_Player>(temp.Actor);
+			if (isP)
+			{
+				//대미지 주고
+				FDamageEvent	DmgEvent;
+				UGameplayStatics::GetPlayerController(GetWorld(), 0);
+				isP->TakeDamage(Damage, DmgEvent, UGameplayStatics::GetPlayerController(GetWorld(), 0), Owner);
+				isEnd = true;
+			}
+		}
+
+		//이동
+		FVector next = GetActorLocation() + Forward * DeltaTime * Speed;
+		SetActorLocation(next);
+	}
+
+<br /> 
+
+3.2.2 이동하는 시한폭탄 PP_ProjectileBoom::Tick
+
+스킬을 사용하는 캐릭터가 클래스를 월드에 생성한 후 페러미터 할당 함수로 변수들의 값(시간,대미지 등)을 조절하면 그에 따라 동작하도록 구현 했습니다.
+
+	if (isEnd)
+	{
+		endtime += DeltaTime;
+		if (endtime >= 1.5f)
+			Destroy();
+		return;
+	}
+	else if (isStart)
+	{
+		//시한폭탄
+		LifeAcc += DeltaTime;
+		if (LifeAcc >= LifeTime)
+		{
+			isEnd = true;
+			isStart = false;
+		}
+
+
+		//터짐
+		if (isEnd)
+		{
+			if (End_Sound)
+				UGameplayStatics::PlaySoundAtLocation(GetWorld(), End_Sound, GetActorLocation());
+
+			My_Particle->SetActive(false);
+			My_Particle->SetWorldScale3D(FVector(0, 0, 0));
+			My_Niagara->SetActive(false);
+			My_Niagara->SetWorldScale3D(FVector(0, 0, 0));
+			if (My_HittedNiagara)
+			{
+				My_HittedNiagara->ActivateSystem();
+				My_HittedNiagara->AttachTo(My_RootScene);
+				My_HittedNiagara->Activate(true);
+				My_HittedNiagara->SetActive(true);
+			}
+			if (My_HittedParticle)
+			{
+				My_HittedParticle->ActivateSystem();
+				My_HittedParticle->AttachTo(My_RootScene);
+				My_HittedParticle->Activate(true);
+				My_HittedParticle->SetActive(true);
+			}
+
+			TArray<FHitResult> temp = SphereMulti(GetActorLocation(), Radius, GetWorld(), Owner, Type);
+			for (auto& hitted : temp)
+			{
+				if (Type == ECC_GameTraceChannel3)//플레이어의 공격
+				{
+					APP_Monster* isMon = Cast<APP_Monster>(hitted.Actor);
+					if (isMon)
+					{
+						if (isMon->GetStatus()->Hp > 0) //시체가 아니면
+						{
+							FDamageEvent	DmgEvent;
+							UGameplayStatics::GetPlayerController(GetWorld(), 0);
+							isMon->TakeDamage(Damage, DmgEvent, UGameplayStatics::GetPlayerController(GetWorld(), 0), Owner);
+						}
+					}
+				}
+				else //(Type == ECC_GameTraceChannel4);
+				{
+					APP_Player* isP = Cast<APP_Player>(hitted.Actor);
+					if (isP)
+					{
+						//대미지 주고
+						FDamageEvent	DmgEvent;
+						UGameplayStatics::GetPlayerController(GetWorld(), 0);
+						isP->TakeDamage(Damage, DmgEvent, UGameplayStatics::GetPlayerController(GetWorld(), 0), Owner);
+					}
+				}
+			}
+		}
+
+		//이동
+		FVector next = GetActorLocation() + Forward * DeltaTime * Speed;
+		SetActorLocation(next);
+	}
+
+<br /> 
+
+3.3 관련 클래스
+
+PP_CircleMoveAttack 특정 캐릭터 주변을 회전하며 닿는 적에게 대미지를 줌
+
+PP_DotDamageSkill 장판기술로 범위 내의 캐릭터에게 대미지를 줌
+
+PP_DotHealSkill 장판기술로 범위 내의 캐릭터에게 대미지를 줌
+
+PP_EffectBase 스킬들의 이펙트 클래스
+
+PP_ProjectileAttack 직선으로 이동하며 단일 캐릭터에게 대미지를 줌
+
+PP_ProjectileBoom 직선으로 이동하며 충돌 또는 일정 시간 후 주변의 캐릭터에게 대미지를 줌
 
 <br /> 
 <br /> 
 <br /> 
 
-3. UI 및 시스템
+4. UI 및 시스템
 
 <br /> 
 <br /> 
 <br /> 
 
-4. 기타
+5. 기타
 
