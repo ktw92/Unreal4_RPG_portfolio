@@ -1,8 +1,12 @@
 # Unreal4_RPG_portfolio
 
 엔진버전 4.26
+
 개발기간 4주
+
 싱글RPG 개인프로젝트
+
+https://youtu.be/Tv0JURa6t2s
 
 1. 플레이어
 
