@@ -14,6 +14,9 @@
 
 마법사 - 단일 개체 공격 후 스플래시, 장판공격, 단일 마비, 범위 공격, 단일공격 후 MP흡수
 
+<br /> 
+<br /> 
+
 
 1.2 코드
 
@@ -88,6 +91,8 @@
 	//기타 조작이 없는 액터를 눌렀을 시 초기화
 	SkillTargetFree();
 	SetUsingItemOff();
+	
+<br /> 
 
 1.2.2 플레이어 캐릭터의 틱 APP_Player::Tick 일부분
 
@@ -321,6 +326,7 @@
 		SimpleStop();
 	}
 
+<br /> 
 
 1.3 관련 클래스
 
@@ -337,15 +343,9 @@ PP_GameInstance 캐릭터정보와 아이템정보를 관리하는 클래스 (�
 PP_Wizard, PP_WizardAnim 마법사
 
 
-
-
-
-
-
-
-
-
-
+<br /> 
+<br /> 
+<br /> 
 
 
 2. 몬스터
@@ -372,6 +372,8 @@ PP_Monster클래스를 상속받은 11가지의 몬스터들이 있으며 각 �
 
 라보스 - 고정된 자리에서 다양한 범위스킬(바둑판식 장판, 4분면매태오, 전체공격 후 흡혈)과 상태이상, 즉사공격 스킬 사용
 
+<br /> 
+<br /> 
 
 2.2 코드
 
@@ -427,7 +429,8 @@ World->Sweep~ 을 사용한 방식 (코드 중복을 제거하기위해 자체 �
 				MyAnim->SetAnimState(AnimType::Idle);
 		}
 	
-	
+<br /> 
+
 2.2.2 탐지 방식2
 
 3개의 플레이어 캐릭터만 가져와 거리 비교로 측정
@@ -465,6 +468,7 @@ World->Sweep~ 을 사용한 방식 (코드 중복을 제거하기위해 자체 �
 		}
 	}
 
+<br /> 
 
 2.2.3 스킬 쿨타임
 
@@ -499,6 +503,7 @@ Tick함수 내부에서 다음과 같이 스킬쿨타임을 체크하고 스킬 
 			}
 		}
 	}
+<br /> 
 
 2.2.4 랜덤한 플레이어에 주변에 1차공격 후 2차 공격하는 스킬
 
@@ -530,6 +535,9 @@ Tick함수 내부에서 다음과 같이 스킬쿨타임을 체크하고 스킬 
 						FRotator::ZeroRotator, param);
 			}
 
+<br /> 
+<br /> 
+
 2.3 관련 클래스
 
 PP_ArachnidBoss, PP_ArachnidBossAnim 레벨2의 보스
@@ -558,15 +566,21 @@ PP_Succubus, PP_SuccubusAnim 레벨3의 보스
 
 PP_TectacleMonster, PP_TentacleMonsterAnim 레벨3의 몬스터
 
-
+<br /> 
+<br /> 
+<br /> 
 
 3. 스킬
 
-
+<br /> 
+<br /> 
+<br /> 
 
 3. UI 및 시스템
 
-
+<br /> 
+<br /> 
+<br /> 
 
 4. 기타
 
