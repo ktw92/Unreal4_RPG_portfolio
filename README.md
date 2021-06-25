@@ -20,10 +20,13 @@ https://youtu.be/Tv0JURa6t2s
 각 캐릭터들의 스킬은 다음과 같습니다
 
 ![knight12](https://user-images.githubusercontent.com/76766673/123456380-bdb3b980-d61d-11eb-8daa-26fbde157233.gif)
+
 기사 - 자신을 주변 몬스터들의 타겟으로, 방어자세 후 받은 대미지만큼 반격, 공격업(지속적으로 체력 감소) 버프, 4연속 단일공격, 범위공격 후 HP흡수
 ![heal12](https://user-images.githubusercontent.com/76766673/123456386-bf7d7d00-d61d-11eb-81f9-497c55ddbab4.gif)
+
 힐러 - 단일 힐, 파티 힐, 단일 상태이상제거, 단일 부활, 전체 부활 및 HP,MP회복
 ![wizard24](https://user-images.githubusercontent.com/76766673/123457202-a4f7d380-d61e-11eb-8456-9ecae23a1d77.gif)
+
 마법사 - 단일 개체 공격 후 스플래시, 장판공격, 단일 마비, 범위 공격, 단일공격 후 MP흡수
 
 <br /> 
