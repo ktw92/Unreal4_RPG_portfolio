@@ -727,8 +727,75 @@ PP_ProjectileBoom 직선으로 이동하며 충돌 또는 일정 시간 후 주�
 <br /> 
 <br /> 
 
-4. UI 및 시스템
+4. UI
+PP_MainWidgetFrame 클래스에서 뷰포트에 보여주는 다른 위젯클래스들을 관리하며, 플레이어 컨트롤러의 입력에 따라서 캐릭터 변경,장비착용, 상점, 몬스터공격등 동작에 따라서 PP_MainWidgetFrame을 통해서 변경사항을 적용 
 
+4.2 코드
+
+4.2.1 미니맵 표시
+미니맵을 촬영할 카메라를 포함한 PP_MiniMapCamOwner 클래스에서 주기적으로 태그를 통한 플레이어와 몬스터를 검색해 미니맵에 표시 합니다 
+
+PP_MiniMapCamOwner::Tick
+
+		if (delay_time <= 0)
+		{
+			//초기화
+			if (IconWidgets.Num() != 0)
+			{
+				for (auto& Icons : IconWidgets)
+				{
+					Icons->RemoveFromParent();
+				}
+				IconWidgets.Reset();
+			}
+
+			//플레이어표시
+			TArray<AActor*> Actors;
+			UGameplayStatics::GetAllActorsWithTag(GetWorld(), "PC", Actors);
+			FVector ActorLoc = GetActorLocation();
+			for (auto& player : Actors)
+			{
+				setIcon(ActorLoc, player->GetActorLocation());
+			}
+			
+			//몬스터표시
+			TArray<AActor*> Actors2;
+			UGameplayStatics::GetAllActorsWithTag(GetWorld(), "Monster", Actors2);
+			for (auto& mob : Actors2)
+			{
+				setIcon(ActorLoc, mob->GetActorLocation(), false);
+			}
+
+
+APP_MiniMapCamOwner::setIcon
+
+	//범위내에 있는지 판단
+	float x = pos.X - mid.X;
+	if (2000 <= x || x <= -2000)
+		return;
+	float y = pos.Y - mid.Y;
+	if (2000 <= y || y <= -2000)
+		return;
+
+	//좌표환산
+	x = 200 + (x / 10);
+	x = 400 - x;
+	y = 200 + (y / 10);
+
+
+	//아이콘 표시
+	if (isPlayer)
+	{
+		IconWidgets.Add(Cast<UPP_MiniMapIcon>(CreateWidget(MiniMap, PlayerIcon)));
+		IconWidgets[IconWidgets.Num()-1]->SetRenderTransform(FWidgetTransform(FVector2D(y, x), FVector2D(0.4f, 0.4f), FVector2D(0, 0), 0));
+		MiniMap->GetPanel()->AddChild(IconWidgets[IconWidgets.Num() - 1]);
+	}
+	else
+	{
+		IconWidgets.Add(Cast<UPP_MiniMapIcon>(CreateWidget(MiniMap, MonsterIcon)));
+		IconWidgets[IconWidgets.Num() - 1]->SetRenderTransform(FWidgetTransform(FVector2D(y, x), FVector2D(0.4f, 0.4f), FVector2D(0, 0), 0));
+		MiniMap->GetPanel()->AddChild(IconWidgets[IconWidgets.Num() - 1]);
+	}
 
 4.3 관련 클래스
 
@@ -745,6 +812,8 @@ PP_InventoryWidget 장비창을 보여주는 클래스
 PP_MainWidgetFrame 모든 위젯들은 담는 클래스
 
 PP_MiniMapIcon 미니맵에 표시되는 녹색(플레이어)/적색(몬스터) 아이콘 클래스
+
+PP_MiniMapCamOwner 미니맵 텍스쳐를 촬영할 카메라를 담은 클래스
 
 PP_MiniMapWidget 미니맵 클래스
 
