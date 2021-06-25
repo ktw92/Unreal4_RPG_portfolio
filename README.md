@@ -491,6 +491,36 @@ Tick함수 내부에서 다음과 같이 스킬쿨타임을 체크하고 스킬 
 		}
 	}
 
+2.2.4 랜덤한 플레이어에 주변에 1차공격 후 2차 공격하는 스킬
+
+	if (IsFirst)
+			{
+				TArray<APP_Player*>* players = temp_controller->GetMyParty();
+				FRandomStream Rs;
+				Rs.GenerateNewSeed();
+				int tempint = Rs.FRandRange(0, 2.99f);
+				APP_Player* Skill2Target = nullptr;
+				if ((*players).Num() <= 3)
+					Skill2Target = (*players)[tempint];
+				if (Skill2Target)
+				{
+					for (int i = 0; i < 8; i++)
+					{
+						Skill2Target->GetMesh()->SetRelativeRotation(FRotator(0.f, GetMesh()->GetRelativeRotation().Yaw + i * 45.f, 0.f));
+						APP_ProjectileBoom* temp = GetWorld()->SpawnActor<APP_ProjectileBoom>(Skill2Effect, Skill2Target->GetActorLocation() + 		Skill2Target->GetMesh()->GetForwardVector() * 400,
+							FRotator::ZeroRotator, param);
+						temp->SetStatus(1.1f, 0, MonsterStatus.Attack[0] * 1.5f, 225, FVector(0, 0, 0), ECC_GameTraceChannel4, this);
+						GetMesh()->SetRelativeRotation(FRotator(0.f, Skill2Target->GetMesh()->GetRelativeRotation().Yaw - i * 45.f, 0.f));
+					}
+				}
+				Skill2Targetpos = Skill2Target->GetActorLocation();
+			}
+			else
+			{
+				APP_ProjectileBoom* temp = GetWorld()->SpawnActor<APP_ProjectileBoom>(Skill2Effect, Skill2Targetpos,
+						FRotator::ZeroRotator, param);
+			}
+
 
 2.3 관련 클래스
 
