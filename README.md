@@ -26,6 +26,7 @@ PP_WizardAnim 마법사 애니메이션
 
 1.3 핵심 코드
 1.3.1 마우스 킬릭스 동작 하는 함수 APP_PlayerController::MovePicking
+{
 bool bHit = GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility,
 			false, result);
 
@@ -99,7 +100,7 @@ bool bHit = GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility,
 	//다른거 눌렀을 시 초기화
 	SkillTargetFree();
 	SetUsingItemOff();
-
+}
 2. 몬스터
 
 3. 스킬
