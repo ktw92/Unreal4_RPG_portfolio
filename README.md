@@ -321,6 +321,7 @@
 		SimpleStop();
 	}
 
+
 1.3 관련 클래스
 
 PP_ElfSwordMaster, PP_ElfSwordMasterAnim 기사
@@ -334,6 +335,14 @@ PP_PlayerController 전체 캐릭터를 조작하기 위한 입력을 받는 클
 PP_GameInstance 캐릭터정보와 아이템정보를 관리하는 클래스 (언리얼의 게임인스턴스를 상속)
 
 PP_Wizard, PP_WizardAnim 마법사
+
+
+
+
+
+
+
+
 
 
 
