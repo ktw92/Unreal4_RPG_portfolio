@@ -6,7 +6,7 @@
 
 싱글RPG 개인프로젝트
 
-<iframe width="1280" height="720" src="https://www.youtube.com/embed/Tv0JURa6t2s" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{% include video id="Tv0JURa6t2s" provider="youtube" %}
 
 https://youtu.be/Tv0JURa6t2s
 
