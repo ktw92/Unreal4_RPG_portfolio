@@ -73,7 +73,7 @@
 					ControlCharacter->SimpleMove(FVector(result.Location.X, result.Location.Y, result.Location.Z));
 			}
 		}
-	//다른거 눌렀을 시 초기화
+	//기타 조작이 없는 액터를 눌렀을 시 초기화
 	SkillTargetFree();
 	SetUsingItemOff();
 
