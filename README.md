@@ -732,7 +732,8 @@ PP_MainWidgetFrame 클래스에서 뷰포트에 보여주는 다른 위젯클래
 
 4.2 코드
 
-4.2.1 미니맵 표시
+4.2.1 미니
+
 미니맵을 촬영할 카메라를 포함한 PP_MiniMapCamOwner 클래스에서 주기적으로 태그를 통한 플레이어와 몬스터를 검색해 미니맵에 표시 합니다 
 
 PP_MiniMapCamOwner::Tick
@@ -796,6 +797,104 @@ APP_MiniMapCamOwner::setIcon
 		IconWidgets[IconWidgets.Num() - 1]->SetRenderTransform(FWidgetTransform(FVector2D(y, x), FVector2D(0.4f, 0.4f), FVector2D(0, 0), 0));
 		MiniMap->GetPanel()->AddChild(IconWidgets[IconWidgets.Num() - 1]);
 	}
+
+4.2.2 퀘스트
+
+퀘스트 번호에 따라 퀘스트를 설정하고 특정 시간마다 거리체크또는 몬스터 사망 시 목표 몬스터와 비교해서 퀘스트 상태를 변경 합니다
+
+	switch (quest_num)
+	{
+	case 1:
+	{
+		temp[0] = FString(TEXT("Goblin"));
+		temp[1] = FString(TEXT("The castle was attacked by the demon army. Kill 15 goblins first"));
+		SetQuest(true, 15, temp[0], temp[1], FName("Goblin"), MonsterType::Goblin); if (Quest_Board) Quest_Board->SetVisibility(ESlateVisibility::Visible);  break;
+	}
+	case 2:
+	{
+		temp[0] = FString(TEXT("Gate"));
+		temp[1] = FString(TEXT("Killed all the monsters in the castle. let's go to the gate"));
+		SetQuest(false, 0, temp[0], temp[1], FName("Door"), MonsterType::none, FVector(-24083.224609, 15460.894531, 8391.061523)); if (Quest_Board) Quest_Board->SetVisibility(ESlateVisibility::Visible);  break;
+	}
+	...
+	
+	UPP_Quset::CheckGoal(FVector pos)
+	{
+	Distance = 9999;
+	if (!isBattle && !isClear)
+	{
+		Distance = FVector::Dist(pos, GoalPostion);
+		if (Distance <= 300)
+		{
+			isClear = true;
+			if (Quest_Board)
+				Quest_Board->SetVisibility(ESlateVisibility::Collapsed);
+			set_Quest_step_by_step();
+		}
+		else
+		{
+			if (Quest_Board)
+			{
+				Quest_Board->SetTargetText(FString::Printf(TEXT("Dist : %.3f"), Distance));
+			}
+		}
+	}
+	return Distance;
+	
+	...
+	
+	//퀘스트 해당 몬스터인지 체크
+	if (type == TargetName)	
+			{
+				MonsterCnt++;
+					if (MonsterCnt >= GoalNum)
+					{
+						isClear = true;
+							if (Quest_Board)
+								Quest_Board->SetVisibility(ESlateVisibility::Collapsed);
+						set_Quest_step_by_step();
+					}
+					else
+					{
+						if (Quest_Board)
+						{
+							//FText temptext = FText::AsNumber(GoalNum - MonsterCnt);
+							//Quest_Board->SetTargetText(temptext);
+							Quest_Board->SetTargetText(FString::Printf(TEXT("%d / %d"), MonsterCnt, GoalNum));
+						}
+					}
+			}
+
+
+4.2.3 아이템 장착
+
+인벤토리의 아이템을 클릭하면 해당 위젯의 소유자에게 해제한 후 소유자를 변경하는 방식으로 아이템을 착용 합니다.
+
+	UPP_EquipItemWidgeet::EQItemClick()
+	{
+	//기존 아이템 소유자 초기화
+	APP_Player* temp_owner = MyData->GetOwnerP();
+	if (temp_owner)
+	{
+		temp_owner->SetItem(EquipItemType::none);
+	}
+
+	APP_PlayerController* temp_controller = Cast<APP_PlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (temp_controller)
+	{
+		APP_Player* temp_player = temp_controller->GetControlCharacter();
+		if (temp_player)
+		{
+			//아이템 소유자 전환
+			temp_player->SetItem(MyData->GetMyItem());
+			MyData->SetOwnerP(temp_player);
+			MyData->SetOwner(temp_player->GetPlayerInfo()->Job);
+		}
+		//장비창 갱신
+		temp_controller->ChangeEquip();
+	}
+	}
+
 
 4.3 관련 클래스
 
