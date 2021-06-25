@@ -368,8 +368,7 @@ PP_Monster클래스를 상속받은 11가지의 몬스터들이 있으며 각 �
 
 2.1 탐지 방식1
 
-
-if (!m_Target)
+	if (!m_Target)
 		{	
 			TArray<FHitResult> temp = SphereMulti(this->GetActorLocation(), DetectRange, GetWorld(), this, ECC_GameTraceChannel4, false);
 			for (auto& hitted : temp)
@@ -409,6 +408,14 @@ if (!m_Target)
 				}
 			}
 		}
+		else
+		{
+			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("none target")));
+			GetController()->StopMovement();
+			if (MyAnim)
+				MyAnim->SetAnimState(AnimType::Idle);
+		}
+	
 	
 2.1 탐지 방식2
 
