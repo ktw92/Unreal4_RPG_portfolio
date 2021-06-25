@@ -27,6 +27,7 @@ PP_WizardAnim 마법사 애니메이션
 1.3 핵심 코드
 
 1.3.1 마우스 입력으로 동작 하는 함수 APP_PlayerController::MovePicking 일부분
+마우스로 클릭한 대상에 따라서 알맞은 처리를 합니다
 
 
 	if (bHit)
@@ -101,6 +102,8 @@ PP_WizardAnim 마법사 애니메이션
 	SetUsingItemOff();
 
 1.3.2 플레이어 캐릭터의 틱 APP_Player::Tick 일부분
+
+3가지 캐릭터의 공통적인 상태이상이나 자동전투에 따른 행동을 처리합니다
 
 	//시체면 타겟제거 및 초기화
 	if (TargetedMonster)
