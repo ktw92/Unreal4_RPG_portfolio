@@ -956,3 +956,53 @@ PP_ShopWidget 상점을 리스트뷰로 보여주는 클래스
 	Destroy();
 	}
 
+5.2 토클 스위치와 벽
+
+몬스터를 상속 받은 스위치 클래스에서 태그를 통해 담당 벽을 검색하고 벽의 이동시작 함수를 호출하면 벽의 Tick에서 벽의 위치를 변경 
+
+	APP_PuzzleSwitch::TakeDamage
+	if (FVector::Distance(DamageCauser->GetActorLocation(), GetActorLocation()) > 200)
+		return 0;
+
+	TArray<AActor*> Actors;
+
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName(TagName) ,Actors);
+	for (auto& Wall : Actors)
+	{
+		APP_PuzzleSwitchWall* temp = Cast< APP_PuzzleSwitchWall>(Wall);
+		if (temp)
+			temp->ChangePos();
+	}
+
+
+	APP_PuzzleSwitchWall::Tick
+	if (isMoving)
+	{
+		float deltapos = 500 * DeltaTime;
+		if (IsFirst)
+		{
+			float temz = GetActorLocation().Z + deltapos;
+			if (temz < OriginPos.Z + 500)
+			{
+				SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, temz));
+			}
+			else
+			{
+				SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, OriginPos.Z + 500));
+				isMoving = false;
+			}
+		}
+		else
+		{
+			float temz = GetActorLocation().Z - deltapos;
+			if (temz > OriginPos.Z - 500)
+			{
+				SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, temz));
+			}
+			else
+			{
+				SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, OriginPos.Z - 500));
+				isMoving = false;
+			}
+		}
+	}
