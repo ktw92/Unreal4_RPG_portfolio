@@ -828,6 +828,8 @@ APP_MiniMapCamOwner::setIcon
 
 # 4.2.2 퀘스트
 
+![quest](https://user-images.githubusercontent.com/76766673/123458655-416ea580-d620-11eb-8104-f1748cd237b4.gif)
+
 퀘스트 번호에 따라 퀘스트를 설정하고 특정 시간마다 거리체크또는 몬스터 사망 시 목표 몬스터와 비교해서 퀘스트 상태를 변경 합니다
 
 	switch (quest_num)
