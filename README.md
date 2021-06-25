@@ -15,7 +15,7 @@
 마법사 - 단일 개체 공격 후 스플래시, 장판공격, 단일 마비, 범위 공격, 단일공격 후 MP흡수
 
 
-1.2 핵심 코드
+1.2 코드
 
 1.2.1 마우스 입력으로 동작 하는 함수 APP_PlayerController::MovePicking 일부분
 마우스로 클릭한 대상에 따라서 알맞은 처리를 합니다
@@ -336,6 +336,9 @@ PP_GameInstance 캐릭터정보와 아이템정보를 관리하는 클래스 (�
 PP_Wizard, PP_WizardAnim 마법사
 
 
+
+
+
 2. 몬스터
 PP_Monster클래스를 상속받은 11가지의 몬스터들이 있으며 각 몬스터들의 특징은 아래와 같습니다.
 고블린 - 탐지(플레이어 캐릭터를 탐색) 후 근거리 공격
@@ -361,7 +364,14 @@ PP_Monster클래스를 상속받은 11가지의 몬스터들이 있으며 각 �
 라보스 - 고정된 자리에서 다양한 범위스킬(바둑판식 장판, 4분면매태오, 전체공격 후 흡혈)과 상태이상, 즉사공격 스킬 사용
 
 
+2.2 코드
+
+2.1 탐지 방식
+
+
+
 2.3 관련 클래스
+
 PP_ArachnidBoss, PP_ArachnidBossAnim 레벨2의 보스
 
 PP_BoomSpider, PP_BoomspiderAnim 레벨2보스의 소환수
@@ -388,9 +398,15 @@ PP_Succubus, PP_SuccubusAnim 레벨3의 보스
 
 PP_TectacleMonster, PP_TentacleMonsterAnim 레벨3의 몬스터
 
+
+
 3. 스킬
 
+
+
 3. UI 및 시스템
+
+
 
 4. 기타
 
