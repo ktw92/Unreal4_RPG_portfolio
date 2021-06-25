@@ -366,7 +366,8 @@ PP_Monster클래스를 상속받은 11가지의 몬스터들이 있으며 각 �
 
 2.2 코드
 
-2.1 탐지 방식1
+2.2.1 탐지 방식1
+World->Sweep~ 을 사용한 방식 (코드 중복을 제거하기위해 자체 함수고 함수안에서 호출 
 
 	if (!m_Target)
 		{	
@@ -417,10 +418,77 @@ PP_Monster클래스를 상속받은 11가지의 몬스터들이 있으며 각 �
 		}
 	
 	
-2.1 탐지 방식2
+2.2.2 탐지 방식2
+3개의 플레이어 캐릭터만 가져와 거리 비교로 측정
+
+	if (!m_Target)
+	{
+		//가장 가까운 캐릭터를 타겟으로
+		APP_PlayerController* temp_controller = Cast<APP_PlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+		Idle();
+		if (temp_controller)
+		{
+			TArray<APP_Player*>* players = temp_controller->GetMyParty();
+			float mindist = 123456789;
+			if (players)
+			{
+				for (auto& player : *players)
+				{
+					if (player)
+					{
+						float temp_dist = FVector::Distance(GetActorLocation(), player->GetActorLocation());
+						if (temp_dist < mindist)
+						{
+							//시체는 안건드림
+							if (player->GetPlayerInfo()->Hp <= 0)
+							{
+								//HittedMonster->ChangeAnimState(AnimType::Death);
+								continue;
+							}
+							mindist = temp_dist;
+							m_Target = player;
+						}
+					}
+				}
+			}
+		}
+	}
 
 
-	
+2.2.3 스킬 쿨타임
+Tick함수 내부에서 다음과 같이 스킬쿨타임을 체크하고 스킬 상태일 시 다른동작을 하지않게 return으로 종료 합니다
+
+	if (isSkillCast)
+	{
+		GetController()->StopMovement();
+		return;
+	}
+	else
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			SkillCoolTime[i] += DeltaTime;
+			if (SkillCoolTime[i] >= MonsterStatus.Skill_cooltime[i])
+			{
+				isSkillCast = true;
+				SkillCoolTime[i] = 0;
+				switch (i)
+				{
+				default:
+					break;
+				case 0: Skill1(); break;
+				case 1: Skill2(); break;
+				case 2: Skill3(); break;
+				case 3: Skill4(); break;
+				case 4: Skill5(); break;
+				}
+				GetController()->StopMovement();
+				return;
+			}
+		}
+	}
+
+
 2.3 관련 클래스
 
 PP_ArachnidBoss, PP_ArachnidBossAnim 레벨2의 보스
