@@ -1,3 +1,4 @@
+![1](https://user-images.githubusercontent.com/76766673/123505390-c6e26c00-d699-11eb-83f6-6680098b12e2.png)
 # Unreal4_RPG_portfolio
 
 엔진버전 4.26
@@ -6,7 +7,7 @@
 
 싱글RPG 개인프로젝트
 
-[![Video Label](https://i.ytimg.com/an_webp/Tv0JURa6t2s/mqdefault_6s.webp?du=3000&sqp=CPfq1oYG&rs=AOn4CLCJgDw7KFfydDxXmHahP3CO3JiwUg)](https://youtu.be/Tv0JURa6t2s)
+[![Video Label](https://user-images.githubusercontent.com/76766673/123505390-c6e26c00-d699-11eb-83f6-6680098b12e2.png)](https://youtu.be/Tv0JURa6t2s)
 
 https://youtu.be/Tv0JURa6t2s
 
